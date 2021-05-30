@@ -12,7 +12,7 @@ import { IoMdArrowDropup } from 'react-icons/io';
 import { formatPrice } from '../../helpers/formatCurrency';
 import Button from '../../components/Button/button';
 import { setUserData } from '../../global/actions/userActions';
-import { includes, remove } from 'lodash';
+import { forEach, includes, remove } from 'lodash';
 import { setToast } from '../../global/actions/toastActions';
 import { firebase, FieldValue } from '../../lib/firebase';
 
@@ -24,14 +24,21 @@ const Kick = ({ userData, userId, setToast, setUserData }) => {
   const [loading, setLoading] = useState(true);
   const [selectedImg, setSelectedImg] = useState('/images/Brand-min.png');
   const [selectedImgKey, setSelectedImgKey] = useState(0);
+  const [selectedSize, setSelectedSize] = useState('');
+  const [isItemInBag, setIsItemInBag] = useState(false);
 
   useEffect(async () => {
     const kickId = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
     const queriedKick = await getKickById(kickId);
     setKick(queriedKick[0]);
+    forEach(bag, (el) => {
+      if (el.id === queriedKick[0].id) {
+        setIsItemInBag(true);
+      }
+    });
     setSelectedImg(queriedKick[0].images[0]);
     setLoading(false);
-  }, []);
+  }, [userData]);
 
   const handleWishlist = () => {
     if (userId) {
@@ -54,6 +61,41 @@ const Kick = ({ userData, userId, setToast, setUserData }) => {
             wishlist: [...wishlistItems]
           })
         })
+    } else {
+      setToast({ type: 'error', message: 'You are not logged in.' });
+    }
+  };
+
+  const handleBag = () => {
+    const itemToBag = {
+      id: kick.id,
+      name: kick.name,
+      color: kick.color,
+      price: kick.price,
+      quantity: 1,
+      size: selectedSize
+    }
+    if (userId) {
+      if (selectedSize) {
+        firebase.firestore().collection('users').doc(userId)
+          .update({
+            bag: FieldValue.arrayUnion(itemToBag)
+          })
+            .then(() => {
+              const bagItems = bag;
+              if (!isItemInBag) {
+                bagItems.push(itemToBag);
+                setUserData({
+                  ...userData,
+                  bag: [...bagItems]
+                });
+                setIsItemInBag(true);
+                setToast({ type: 'success', message: 'Item added to cart' });
+              }
+            })
+      } else {
+        setToast({ type: 'error', message: 'Please select a size' });
+      }
     } else {
       setToast({ type: 'error', message: 'You are not logged in.' });
     }
@@ -119,10 +161,10 @@ const Kick = ({ userData, userId, setToast, setUserData }) => {
                 <div className='text-2xl font-extralight tracking-widest text-center px-2 pt-2'>{kick.color}</div>
                 <div className='text-3xl font-bold tracking-widest text-center px-2 pt-4'>&#8377;{formatPrice(kick.price)}</div>
                 <div className='text-lg font-extralight tracking-widest text-center text-gray-600 px-2 pt-2'>.incl of taxes and duties</div>
-                <div className='px-2 py-2 lg:pt-6 flex items-center' onClick={() => { }}>
+                <div className='px-2 py-2 lg:pt-6 flex items-center' onClick={() => !isItemInBag ? handleBag() : null}>
                   <Button
-                    disable={false}
-                    btnText={false ? 'ADDED TO BAG' : 'ADD TO BAG'}
+                    disabled={isItemInBag}
+                    btnText={isItemInBag ? 'ADDED TO BAG' : 'ADD TO BAG'}
                   />
                   <div className='text-3xl cursor-pointer hidden lg:flex pl-10' onClick={(e) => { e.stopPropagation(); handleWishlist(); }}>
                     <GoHeart className={`${includes(wishlist, kick.id) ? 'text-red-700' : 'text-gray-400'} text-opacity-90`} />
@@ -136,13 +178,13 @@ const Kick = ({ userData, userId, setToast, setUserData }) => {
                   {
                     kick?.sizes.map((el, i) => (
                       <div
-                        onClick={() => { }}
+                        onClick={() => setSelectedSize(el.number)}
                         className={`
                             cursor-pointer m-2 px-6 py-3
                             border hover:border-gray-800
-                            border-gray-200
+                            ${selectedSize === el.number ? 'border-red-500' : 'border-gray-200'}
                             tracking-widest rounded-md
-                            shadow-sm
+                            ${selectedSize === el.number ? 'shadow-md' : 'shadow-sm'}
                           `}
                         key={i}
                       >
