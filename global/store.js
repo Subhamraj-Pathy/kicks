@@ -1,14 +1,24 @@
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
-import { createWrapper } from 'next-redux-wrapper';
+// import { createWrapper } from 'next-redux-wrapper';
 import RootReducer from './reducer/rootReducer';
+import { persistReducer, persistStore } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
-const middleware = [thunk];
 
-const composeEnhancers = typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) : compose;
 
-const enhancer = composeEnhancers(applyMiddleware(...middleware));
+const persistConfig = {
+  timeout: 0,
+  key: 'root',
+  storage,
+};
+const persistedReducer = persistReducer(persistConfig, RootReducer);
 
-const store = () => createStore(RootReducer, enhancer);
+const store =  createStore(persistedReducer, composeWithDevTools(applyMiddleware(thunk)));
 
-export const wrapper = createWrapper(store);
+const persistor = persistStore(store);
+
+export { store, persistor }
+
+// export const wrapper = createWrapper(store);
