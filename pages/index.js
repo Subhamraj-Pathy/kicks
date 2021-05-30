@@ -53,11 +53,11 @@ const Home = () => {
               </div>
               </div>
             </div>
-            <div className='flex flex-col justify-center items-center lg:items-end'>
+            <div className='flex flex-col justify-center items-center lg:items-end lg:pr-10'>
               <p className='text-center tracking-widest font-thin text-2xl inline lg:hidden'>Discover the latest collection</p>
               <p className='text-right tracking-widest font-thin text-4xl hidden lg:inline mb-6'>Discover the</p>
               <p className='text-right tracking-widest font-thin text-4xl hidden lg:inline'>latest collection</p>
-              <Link href='/shop'><div className='mt-6 lg:mt-10 px-6 py-4 text-2xl tracking-widest bg-white text-black cursor-pointer'>Shop Now</div></Link>
+              <Link href='/kicks'><div className='mt-6 lg:mt-10 px-6 py-4 text-2xl tracking-widest bg-white text-black cursor-pointer'>Shop Now</div></Link>
             </div>
           </div>
 
@@ -103,6 +103,20 @@ const Home = () => {
               alt='banner'
             />
           </div>
+
+          {/* LeBron 18 Feature */}
+          <div className='shadow-md w-full h-52 lg:h-80 flex justify-center' style={{ background: '#F7F7F7' }}>
+            <img
+              loading='lazy'
+              src='/images/LeBron18.jpg'
+              alt='banner'
+            />
+          </div>
+          <Link href='/kicks/9e19573c-156e-4a75-b996-8746828ea052'>
+            <div className='shadow-md mb-6 h-auto flex items-center justify-center p-4 cursor-pointer' style={{ background: '#F7F7F7' }}>
+              <div className='w-auto p-4 tracking-widest text-xl text-white font-bold' style={{ background: '#FE4429' }}>Shop Now</div>
+            </div>
+          </Link>
 
         </div>
       </div>
