@@ -16,9 +16,9 @@ const MobileMenu = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [pathName, setPathName] = useState('');
 
-   useEffect(() => {
-     setPathName(window.location.pathname);
-   }, []);
+  useEffect(async () => {
+    setPathName(window.location.pathname);
+  }, []);
 
   return (
     <Fragment>
@@ -47,7 +47,7 @@ const MobileMenu = () => {
         </div>
 
         <div className='space-y-8 flex flex-col items-center'>
-        <Link href='/'><div><RiHome2Fill className={`${iconStyles} ${pathName === '/' ? 'text-purple-800 text-4xl' : 'text-black' }`} /></div></Link>
+          <Link href='/'><div><RiHome2Fill className={`${iconStyles} ${pathName === '/' ? 'text-purple-800 text-4xl' : 'text-black'}`} /></div></Link>
           <div className='relative'>
             <IoBag className={`${iconStyles}`} />
             <span className='px-2 py-0.5 rounded-full bg-yellow-300 text-sm absolute -top-2 left-6'>0</span>
@@ -60,9 +60,16 @@ const MobileMenu = () => {
           />
         </div>
 
-        <div className='my-14 tracking-widest font-thin px-4 py-2 rounded shadow-md cursor-pointer border border-green-400 text-green-700'>
-          LOGIN
-        </div>
+        {
+          true ?
+            <div className='my-14 tracking-widest font-thin px-4 py-2 rounded shadow-md cursor-pointer border border-green-400 text-green-700'>
+              LOGIN
+            </div>
+            :
+            <div className='my-14 tracking-widest font-thin px-4 py-2 rounded shadow-md cursor-pointer border border-red-400 text-red-700'>
+              LOGOUT
+            </div>
+        }
       </div>
     </Fragment>
   )
