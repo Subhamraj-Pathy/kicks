@@ -36,6 +36,7 @@ const Home = () => {
           {/* REST CONTENT GOES BELOW */}
           {/* ----------------------- */}
 
+
           {/* BANNER */}
           <div className='shadow-md w-full h-80 flex justify-center' style={{ background: '#FF314D' }}>
             <img
@@ -45,6 +46,7 @@ const Home = () => {
             />
           </div>
 
+          {/* NEW ARRIVALS */}
           <div className='text-center my-6 tracking-widest font-light text-2xl lg:text-4xl'>
             NEW ARRIVALS
           </div>
@@ -54,6 +56,15 @@ const Home = () => {
                 <Card key={i} Item={el} />
               ))
             }
+          </div>
+
+          {/* MID POSTER */}
+          <div className='shadow-md w-full h-80 flex justify-center mb-4' style={{ background: '#C3C3C3' }}>
+            <img
+              loading='lazy'
+              src='/images/mid.png'
+              alt='banner'
+            />
           </div>
 
         </div>

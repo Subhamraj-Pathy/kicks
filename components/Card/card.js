@@ -21,7 +21,7 @@ const Card = ({ Item }) => {
       </div>
       <div className='tracking-widest font-bold text-xl'>&#8377;{formatPrice(Item.price)}</div>
       <p className='text-sm line-clamp-3 px-3 tracking-widest text-justify'>{Item.desc}</p>
-      <Link href='#'>
+      <Link href={`/kicks/${Item.id}`}>
         <div><Button btnText={'VIEW'} /></div>
       </Link>
     </div>
