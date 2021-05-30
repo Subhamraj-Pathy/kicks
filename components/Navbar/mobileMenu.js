@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import Image from 'next/image';
 
 import { TiUser } from 'react-icons/ti';
@@ -13,6 +13,11 @@ const MobileMenu = () => {
   const iconStyles = 'text-2xl cursor-pointer';
 
   const [showMenu, setShowMenu] = useState(false);
+  const [pathName, setPathName] = useState('');
+
+   useEffect(() => {
+     setPathName(window.location.pathname);
+   }, []);
 
   return (
     <Fragment>
@@ -41,7 +46,7 @@ const MobileMenu = () => {
         </div>
 
         <div className='space-y-8 flex flex-col items-center'>
-          <RiHome2Fill className={`${iconStyles}`} />
+          <RiHome2Fill className={`${iconStyles} ${pathName === '/' ? 'text-purple-800 text-4xl' : 'text-black' }`} />
           <div className='relative'>
             <IoBag className={`${iconStyles}`} />
             <span className='px-2 py-0.5 rounded-full bg-yellow-300 text-sm absolute -top-2 left-6'>0</span>

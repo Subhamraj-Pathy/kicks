@@ -23,7 +23,9 @@ const Home = () => {
           </div>
 
           {/* REST CONTENT GOES BELOW */}
+          {/* ----------------------- */}
 
+          {/* BANNER */}
           <div className='shadow-md w-full h-80 flex justify-center' style={{ background: '#FF314D' }}>
             <img
               loading='lazy'
@@ -31,6 +33,7 @@ const Home = () => {
               alt='banner'
             />
           </div>
+
         </div>
       </div>
     </div>
