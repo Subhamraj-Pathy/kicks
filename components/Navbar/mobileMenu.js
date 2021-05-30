@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -8,8 +9,9 @@ import { IoBag } from 'react-icons/io5';
 import { ImHeart } from 'react-icons/im';
 import { HiMenuAlt4 } from 'react-icons/hi';
 import { IoClose } from 'react-icons/io5';
+import { setModalTrue } from '../../global/actions/modalActions';
 
-const MobileMenu = () => {
+const MobileMenu = ({ userId, setModalTrue }) => {
 
   const iconStyles = 'text-2xl cursor-pointer';
 
@@ -61,8 +63,8 @@ const MobileMenu = () => {
         </div>
 
         {
-          true ?
-            <div className='my-14 tracking-widest font-thin px-4 py-2 rounded shadow-md cursor-pointer border border-green-400 text-green-700'>
+          !userId ?
+            <div onClick={() => { setShowMenu(false); setModalTrue(); }} className='my-14 tracking-widest font-thin px-4 py-2 rounded shadow-md cursor-pointer border border-green-400 text-green-700'>
               LOGIN
             </div>
             :
@@ -75,4 +77,14 @@ const MobileMenu = () => {
   )
 }
 
-export default MobileMenu
+const mapStateToProps = state => {
+  return {
+    userId: state.UserReducer.userId
+  }
+}
+
+const mapDispatchToProps = {
+  setModalTrue: () => setModalTrue()
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MobileMenu)

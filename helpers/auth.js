@@ -26,6 +26,30 @@ export const getUserById = async (userId) => {
   return user;
 }
 
+export const registerUser = async (name, email, password) => {
+  let res;
+  await firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then(async (userCredential) => {
+      await firebase.firestore().collection('users')
+        .doc(userCredential.user.uid)
+        .set({
+          id: userCredential.user.uid,
+          name,
+          email,
+          createdAt: Date.now(),
+          address: [],
+          orderHistory: [],
+          wishlist: [],
+          bag: []
+        })
+      res = { success: true, message: '',  userId: userCredential.user.uid };
+    })
+    .catch((error) => {
+      res = { success: false, message: error.message, userId: '' };
+    });
+  return res
+}
+
 export const logoutUser = async () => {
   let res;
   await firebase.auth().signOut()

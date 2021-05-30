@@ -11,8 +11,10 @@ import { RiLoginCircleLine } from 'react-icons/ri';
 import { RiLogoutCircleLine } from 'react-icons/ri';
 
 import { setModalTrue } from '../../global/actions/modalActions';
+import { logoutUser } from '../../helpers/auth';
+import { setUserData, setUserIdFromFirebase } from '../../global/actions/userActions';
 
-const SideNav = ({ userId, setModalTrue }) => {
+const SideNav = ({ userId, setModalTrue, setUserData, setUserIdFromFirebase }) => {
 
   const iconStyles = 'text-2xl cursor-pointer';
 
@@ -20,10 +22,23 @@ const SideNav = ({ userId, setModalTrue }) => {
 
   useEffect(async () => {
     setPathName(window.location.pathname);
-  }, [userId]);
+  }, []);
 
-  const handleLogout = () => {
-
+  const handleLogout = async () => {
+    const response = await logoutUser();
+    if (response) {
+      setUserIdFromFirebase('');
+      setUserData({
+        address: [],
+        email: '',
+        createdAt: 0,
+        id: '',
+        name: '',
+        bag: [],
+        wishlist: [],
+        orderHistory: []
+      });
+    }
   }
 
   return (
@@ -48,7 +63,7 @@ const SideNav = ({ userId, setModalTrue }) => {
         {false && <TiUser className={`${iconStyles} text-4xl`} />}
       </div>
 
-      { true ?
+      { !userId ?
         <RiLoginCircleLine
           onClick={() => setModalTrue()}
           className={`${iconStyles} text-4xl text-green-600`}
@@ -71,7 +86,9 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-  setModalTrue: () => setModalTrue()
+  setModalTrue: () => setModalTrue(),
+  setUserIdFromFirebase: (args) => setUserIdFromFirebase(args),
+  setUserData: (args) => setUserData(args)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SideNav)
