@@ -10,8 +10,10 @@ import { ImHeart } from 'react-icons/im';
 import { HiMenuAlt4 } from 'react-icons/hi';
 import { IoClose } from 'react-icons/io5';
 import { setModalTrue } from '../../global/actions/modalActions';
+import { setUserData, setUserIdFromFirebase } from '../../global/actions/userActions';
+import { logoutUser } from '../../helpers/auth';
 
-const MobileMenu = ({ userId, setModalTrue }) => {
+const MobileMenu = ({ userId, setModalTrue, setUserData, setUserIdFromFirebase }) => {
 
   const iconStyles = 'text-2xl cursor-pointer';
 
@@ -21,6 +23,23 @@ const MobileMenu = ({ userId, setModalTrue }) => {
   useEffect(async () => {
     setPathName(window.location.pathname);
   }, []);
+
+  const handleLogout = async () => {
+    const response = await logoutUser();
+    if (response) {
+      setUserIdFromFirebase('');
+      setUserData({
+        address: [],
+        email: '',
+        createdAt: 0,
+        id: '',
+        name: '',
+        bag: [],
+        wishlist: [],
+        orderHistory: []
+      });
+    }
+  }
 
   return (
     <Fragment>
@@ -68,7 +87,7 @@ const MobileMenu = ({ userId, setModalTrue }) => {
               LOGIN
             </div>
             :
-            <div className='my-14 tracking-widest font-thin px-4 py-2 rounded shadow-md cursor-pointer border border-red-400 text-red-700'>
+            <div onClick={() => handleLogout()} className='my-14 tracking-widest font-thin px-4 py-2 rounded shadow-md cursor-pointer border border-red-400 text-red-700'>
               LOGOUT
             </div>
         }
@@ -84,7 +103,9 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-  setModalTrue: () => setModalTrue()
+  setModalTrue: () => setModalTrue(),
+  setUserIdFromFirebase: (args) => setUserIdFromFirebase(args),
+  setUserData: (args) => setUserData(args)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MobileMenu)
