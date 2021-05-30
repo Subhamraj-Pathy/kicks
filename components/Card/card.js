@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { HiStar } from 'react-icons/hi';
 
 import { formatPrice } from '../../helpers/formatCurrency';
+import Button from '../Button/button';
 
 const Card = ({ Item }) => {
   return (
@@ -21,9 +22,7 @@ const Card = ({ Item }) => {
       <div className='tracking-widest font-bold text-xl'>&#8377;{formatPrice(Item.price)}</div>
       <p className='text-sm line-clamp-3 px-3 tracking-widest text-justify'>{Item.desc}</p>
       <Link href='#'>
-        <button className='px-10 py-2 rounded shadow-md tracking-widest font-extralight text-xl bg-blue-900 bg-opacity-90 text-white'>
-          VIEW
-        </button>
+        <div><Button btnText={'VIEW'} /></div>
       </Link>
     </div>
   )
