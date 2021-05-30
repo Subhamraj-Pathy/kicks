@@ -23,6 +23,7 @@ const Kick = ({ userData, userId, setToast, setUserData }) => {
   const [kick, setKick] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedImg, setSelectedImg] = useState('/images/Brand-min.png');
+  const [selectedImgKey, setSelectedImgKey] = useState(0);
 
   useEffect(async () => {
     const kickId = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
@@ -88,7 +89,7 @@ const Kick = ({ userData, userId, setToast, setUserData }) => {
                 <div className='flex flex-row lg:flex-col h-auto justify-center'>
                   {
                     kick?.images.map((el, i) => (
-                      <div key={i} onClick={() => setSelectedImg(el)} className={`cursor-pointer rounded overflow-hidden m-2 border border-gray-300 hover:border-gray-800 shadow-md`}>
+                      <div key={i} onClick={() => { setSelectedImg(el); setSelectedImgKey(i); }} className={`cursor-pointer rounded overflow-hidden m-2 border ${selectedImgKey === i ? 'border-red-400' : 'border-gray-300'} hover:border-gray-800 shadow-md`}>
                         <Image
                           src={el}
                           width={120}

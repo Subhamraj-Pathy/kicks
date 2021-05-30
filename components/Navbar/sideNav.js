@@ -68,7 +68,7 @@ const SideNav = ({ userId, userData, setModalTrue, setUserData, setUserIdFromFir
           <ImHeart className={`${iconStyles}`} />
           <span className='px-2 py-0.5 rounded-full bg-yellow-300 text-sm absolute -top-2 left-6'>{wishlistLength}</span>
         </div>
-        {false && <TiUser className={`${iconStyles} text-4xl`} />}
+        {userId && <TiUser className={`${iconStyles} text-4xl`} />}
       </div>
 
       { !userId ?
