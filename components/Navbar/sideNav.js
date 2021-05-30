@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import Image from 'next/image';
 import Link from 'next/link';
-import { setUserIdFromFirebase } from '../../global/actions/userActions'
 
 import { TiUser } from 'react-icons/ti';
 import { RiHome2Fill } from 'react-icons/ri';
@@ -10,9 +9,10 @@ import { IoBag } from 'react-icons/io5';
 import { ImHeart } from 'react-icons/im';
 import { RiLoginCircleLine } from 'react-icons/ri';
 import { RiLogoutCircleLine } from 'react-icons/ri';
-import { getUserId } from '../../helpers/auth';
 
-const SideNav = ({ userId }) => {
+import { setModalTrue } from '../../global/actions/modalActions';
+
+const SideNav = ({ userId, setModalTrue }) => {
 
   const iconStyles = 'text-2xl cursor-pointer';
 
@@ -50,6 +50,7 @@ const SideNav = ({ userId }) => {
 
       { true ?
         <RiLoginCircleLine
+          onClick={() => setModalTrue()}
           className={`${iconStyles} text-4xl text-green-600`}
         />
         :
@@ -69,4 +70,8 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(SideNav)
+const mapDispatchToProps = {
+  setModalTrue: () => setModalTrue()
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SideNav)
