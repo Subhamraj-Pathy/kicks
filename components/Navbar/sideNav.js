@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { TiUser } from 'react-icons/ti';
 import { RiHome2Fill } from 'react-icons/ri';
@@ -25,7 +26,7 @@ const SideNav = () => {
       />
 
       <div className='space-y-8 flex flex-col items-center'>
-        <RiHome2Fill className={`${iconStyles} ${pathName === '/' ? 'text-purple-800 text-4xl' : 'text-black' }`} />
+        <Link href='/'><div><RiHome2Fill className={`${iconStyles} ${pathName === '/' ? 'text-purple-800 text-4xl' : 'text-black' }`} /></div></Link>
         <div className='relative'>
           <IoBag className={`${iconStyles}`} />
           <span className='px-2 py-0.5 rounded-full bg-yellow-300 text-sm absolute -top-2 left-6'>0</span>

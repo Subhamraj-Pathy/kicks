@@ -18,7 +18,7 @@ const Home = () => {
   return (
     <div className='flex justify-center bg-gray-100'>
       <Head>
-        <title>K I C K S</title>
+        <title>Nike | Home</title>
         <meta name="description" content="A mock nike kicks online shopping app made for educational purpose" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
