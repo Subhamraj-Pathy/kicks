@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import Head from 'next/head';
 import Image from 'next/image';
 import Nav from '../../components/Navbar';
@@ -10,8 +11,14 @@ import { IoMdArrowDropdown } from 'react-icons/io';
 import { IoMdArrowDropup } from 'react-icons/io';
 import { formatPrice } from '../../helpers/formatCurrency';
 import Button from '../../components/Button/button';
+import { setUserData } from '../../global/actions/userActions';
+import { includes, remove } from 'lodash';
+import { setToast } from '../../global/actions/toastActions';
+import { firebase, FieldValue } from '../../lib/firebase';
 
-const Kick = () => {
+const Kick = ({ userData, userId, setToast, setUserData }) => {
+
+  const { bag, wishlist } = userData;
 
   const [kick, setKick] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,6 +31,32 @@ const Kick = () => {
     setSelectedImg(queriedKick[0].images[0]);
     setLoading(false);
   }, []);
+
+  const handleWishlist = () => {
+    if (userId) {
+      firebase.firestore().collection('users').doc(userId)
+      .update({
+        wishlist: includes(wishlist, kick.id) ?
+          FieldValue.arrayRemove(kick.id)
+          :
+          FieldValue.arrayUnion(kick.id)
+      })
+        .then(() => {
+          const wishlistItems = wishlist;
+          if (includes(wishlist, kick.id)) {
+            remove(wishlistItems, (i) => i === kick.id);
+          } else {
+            wishlistItems.push(kick.id);
+          }
+          setUserData({
+            ...userData,
+            wishlist: [...wishlistItems]
+          })
+        })
+    } else {
+      setToast({ type: 'error', message: 'You are not logged in.' });
+    }
+  };
 
   return (
     <div className='flex justify-center bg-gray-100'>
@@ -90,13 +123,13 @@ const Kick = () => {
                     disable={false}
                     btnText={false ? 'ADDED TO BAG' : 'ADD TO BAG'}
                   />
-                  <div className='text-3xl cursor-pointer hidden lg:flex pl-10' onClick={(e) => { e.stopPropagation(); }}>
-                    <GoHeart className={`text-gray-400 text-opacity-90`} />
+                  <div className='text-3xl cursor-pointer hidden lg:flex pl-10' onClick={(e) => { e.stopPropagation(); handleWishlist(); }}>
+                    <GoHeart className={`${includes(wishlist, kick.id) ? 'text-red-700' : 'text-gray-400'} text-opacity-90`} />
                   </div>
                 </div>
-                <div className='text-3xl cursor-pointer block lg:hidden absolute top-20 right-6' onClick={() => { }}>
-                <GoHeart className={`text-gray-400 text-opacity-90`} />
-              </div>
+                <div className='text-3xl cursor-pointer block lg:hidden absolute top-20 right-6' onClick={() => { handleWishlist(); }}>
+                  <GoHeart className={`${includes(wishlist, kick.id) ? 'text-red-700' : 'text-gray-400'} text-opacity-90`} />
+                </div>
                 <div className='text-lg font-extralight tracking-widest text-center px-2 pt-4'>Select Size</div>
                 <div className='grid grid-flow-row-dense grid-cols-2 lg:grid-cols-3'>
                   {
@@ -130,4 +163,16 @@ const Kick = () => {
   )
 }
 
-export default Kick
+const mapStateToProps = state => {
+  return {
+    userId: state.UserReducer.userId,
+    userData: state.UserReducer.userData
+  }
+}
+
+const mapDispatchToProps = {
+  setUserData: (args) => setUserData(args),
+  setToast: (args) => setToast(args),
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Kick)
