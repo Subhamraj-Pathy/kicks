@@ -14,15 +14,23 @@ import { setModalTrue } from '../../global/actions/modalActions';
 import { logoutUser } from '../../helpers/auth';
 import { setUserData, setUserIdFromFirebase } from '../../global/actions/userActions';
 
-const SideNav = ({ userId, setModalTrue, setUserData, setUserIdFromFirebase }) => {
+const SideNav = ({ userId, userData, setModalTrue, setUserData, setUserIdFromFirebase }) => {
 
   const iconStyles = 'text-2xl cursor-pointer';
 
   const [pathName, setPathName] = useState('');
+  const [bagLength, setBagLength] = useState(0);
+  const [wishlistLength, setWishlistLength] = useState(0);
 
   useEffect(async () => {
     setPathName(window.location.pathname);
   }, []);
+
+  useEffect(() => {
+    const { bag, wishlist } = userData;
+    setBagLength(bag.length);
+    setWishlistLength(wishlist.length);
+  }, [userData]);
 
   const handleLogout = async () => {
     const response = await logoutUser();
@@ -54,11 +62,11 @@ const SideNav = ({ userId, setModalTrue, setUserData, setUserIdFromFirebase }) =
         <Link href='/'><div><RiHome2Fill className={`${iconStyles} ${pathName === '/' ? 'text-purple-800 text-4xl' : 'text-black'}`} /></div></Link>
         <div className='relative'>
           <IoBag className={`${iconStyles}`} />
-          <span className='px-2 py-0.5 rounded-full bg-yellow-300 text-sm absolute -top-2 left-6'>0</span>
+          <span className='px-2 py-0.5 rounded-full bg-yellow-300 text-sm absolute -top-2 left-6'>{bagLength}</span>
         </div>
         <div className='relative'>
           <ImHeart className={`${iconStyles}`} />
-          <span className='px-2 py-0.5 rounded-full bg-yellow-300 text-sm absolute -top-2 left-6'>0</span>
+          <span className='px-2 py-0.5 rounded-full bg-yellow-300 text-sm absolute -top-2 left-6'>{wishlistLength}</span>
         </div>
         {false && <TiUser className={`${iconStyles} text-4xl`} />}
       </div>
@@ -81,7 +89,8 @@ const SideNav = ({ userId, setModalTrue, setUserData, setUserIdFromFirebase }) =
 
 const mapStateToProps = state => {
   return {
-    userId: state.UserReducer.userId
+    userId: state.UserReducer.userId,
+    userData: state.UserReducer.userData,
   }
 }
 
