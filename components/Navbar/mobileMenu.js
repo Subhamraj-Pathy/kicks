@@ -21,7 +21,7 @@ const MobileMenu = () => {
 
   return (
     <Fragment>
-      <div className='bg-white shadow-md w-full h-14 flex items-center justify-end pr-6 z-10 fixed'>
+      <div className='bg-white shadow-md w-full h-14 flex items-center justify-end pr-6 z-30 fixed'>
         {
           !showMenu ?
             <HiMenuAlt4 className='text-3xl cursor-pointer' onClick={() => setShowMenu(true)} />
@@ -33,7 +33,7 @@ const MobileMenu = () => {
         className={
           `bg-gray-100 w-full
           ${showMenu ? 'h-screen' : 'h-0'}
-          fixed z-0 duration-75 overflow-hidden
+          fixed z-20 duration-75 overflow-hidden
           flex flex-col items-center pt-14 select-none`
         }
       >
