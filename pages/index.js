@@ -67,6 +67,19 @@ const Home = () => {
             />
           </div>
 
+          {/* BEST SELLER */}
+          {/* BEST SELLERS IS DUPLICATED AS OF NOW */}
+          <div className='text-center my-6 tracking-widest font-light text-2xl lg:text-4xl'>
+            BEST SELLERS
+          </div>
+          <div className='grid grid-flow-row-dense md:grid-cols-2 lg:grid-cols-3'>
+            {
+              newAdditions?.map((el, i) => (
+                <Card key={i} Item={el} />
+              ))
+            }
+          </div>
+
         </div>
       </div>
     </div>
