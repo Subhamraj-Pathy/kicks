@@ -50,6 +50,23 @@ export const registerUser = async (name, email, password) => {
   return res
 }
 
+export const loginUser = async (email, password) => {
+  let res;
+  await firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(data => {
+      res = { success: true, message: '',  userId: data.user.uid };
+    })
+    .catch((error) => {
+      console.log(error);
+      if (error.code === 'auth/user-not-found') {
+        res = { success: false, message: 'User Doesn Not Exist', userId: '' };
+      } else {
+        res = { success: false, message: error.message, userId: '' };
+      }
+    });
+  return res
+}
+
 export const logoutUser = async () => {
   let res;
   await firebase.auth().signOut()

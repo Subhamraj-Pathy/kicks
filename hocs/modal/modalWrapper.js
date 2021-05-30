@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { IoIosCloseCircle } from 'react-icons/io';
 import { setModalFalse } from '../../global/actions/modalActions';
 import { setToast } from '../../global/actions/toastActions';
-import { getUserById, registerUser } from '../../helpers/auth';
+import { getUserById, loginUser, registerUser } from '../../helpers/auth';
 import { setUserIdFromFirebase, setUserData } from '../../global/actions/userActions';
 
 const ModalWrapper = ({ modalState, setModalFalse, setToast, setUserIdFromFirebase, setUserData, children }) => {
@@ -15,7 +15,14 @@ const ModalWrapper = ({ modalState, setModalFalse, setToast, setUserIdFromFireba
   const [registerName, setRegisterName] = useState('');
   const [registerEmail, setRegisterEmail] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
+
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+
   const [registerBtnDisable, setRegisterBtnDisable] = useState(false);
+  const [loginBtnDisable, setLoginBtnDisable] = useState(false);
+
+  const disableLogin = !loginEmail || !loginPassword || loginBtnDisable;
 
   const disableRegister = !registerName || !registerEmail || !registerPassword || registerBtnDisable;
 
@@ -45,6 +52,27 @@ const ModalWrapper = ({ modalState, setModalFalse, setToast, setUserIdFromFireba
     }
   };
 
+  const handleLogin = async () => {
+    setLoginBtnDisable(true);
+    const isEmailValid = validateEmail(loginEmail);
+    if (!isEmailValid) {
+      setToast({ type: 'error', message: 'Invalid Email. Please Enter A Valid One' });
+      setLoginBtnDisable(false);
+    } else {
+      const response = await loginUser(loginEmail, loginPassword);
+      if (!response.success) {
+        setToast({ type: 'error', message: response.message });
+        setLoginBtnDisable(false);
+      } else {
+        const userData = await getUserById(response.userId);
+        setUserData(userData);
+        setUserIdFromFirebase(response.userId);
+        setLoginBtnDisable(false);
+        setModalFalse();
+      }
+    }
+  }
+
   return (
     <div className='relative'>
 
@@ -64,9 +92,9 @@ const ModalWrapper = ({ modalState, setModalFalse, setToast, setUserIdFromFireba
             <div className='w-full lg:w-96 h-auto bg-white flex flex-col p-5'>
               <h4 className='py-2 tracking-widest font-semibold text-xl'>Welcome !</h4>
               <p className='py-2 tracking-widest text-justify font-thin text-md'>How about you login and we find you some aweome kicks ?</p>
-              <input type='text' placeholder='Email . . .' className='p-2 border border-gray-300 my-2 tracking-widest font-extralight' />
-              <input type='password' placeholder='Password . . .' className='p-2 border border-gray-300 my-2 tracking-widest font-extralight' />
-              <button className='tracking-widest font-extralight text-lg py-2 px-4 bg-black text-white mt-2'>LOGIN</button>
+              <input value={loginEmail} onChange={(e) => setLoginEmail(e.target.value.trim())} type='text' placeholder='Email . . .' className='p-2 border border-gray-300 my-2 tracking-widest font-extralight' />
+              <input value={loginPassword} onChange={(e) => setLoginPassword(e.target.value.trim())} type='password' placeholder='Password . . .' className='p-2 border border-gray-300 my-2 tracking-widest font-extralight' />
+              <button disabled={disableLogin} onClick={() => handleLogin()} className={`tracking-widest font-extralight text-lg py-2 px-4 ${disableLogin ? 'bg-gray-400' : 'bg-black'} text-white mt-2`}>LOGIN</button>
               <p className='text-center text-md tracking-widest font-thin pt-4'>Don't have an account ? <span onClick={() => { setShowLogin(false); setShowRegister(true); }} className='cursor-pointer font-semibold'>Register Now</span></p>
             </div>
 
