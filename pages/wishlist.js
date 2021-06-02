@@ -1,23 +1,30 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
+import { connect } from 'react-redux';
+
 import Nav from '../components/Navbar';
 import Card from '../components/Card/card';
-import { connect } from 'react-redux';
 import { getKicksByIds } from '../helpers/kicks';
 import { setModalTrue } from '../global/actions/modalActions';
 import { isEmpty } from 'lodash';
 import Loader from '../components/Loader/Loader';
+import Button from '../components/Button/button';
 
 const Wishlist = ({ userId, userData, setModalTrue }) => {
 
   const [wishlistData, setWishlistData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(async () => {
     if (userId) {
       const { wishlist } = userData;
-      const wishlistedKicks = await getKicksByIds(wishlist);
-      setWishlistData(wishlistedKicks);
+      if (!isEmpty(wishlist)) {
+        const wishlistedKicks = await getKicksByIds(wishlist);
+        setWishlistData(wishlistedKicks);
+      }
+      setLoading(false);
     } else {
       setModalTrue();
     }
@@ -46,16 +53,32 @@ const Wishlist = ({ userId, userData, setModalTrue }) => {
           {/* ----------------------- */}
 
           {
-            isEmpty(wishlistData) ?
+            loading ?
               <div className='mt-20'><Loader /></div>
               :
-              <div className='grid grid-flow-row-dense md:grid-cols-2 lg:grid-cols-3'>
-                {
-                  wishlistData?.map((el, i) => (
-                    <Card key={i} Item={el} />
-                  ))
-                }
-              </div>
+              (
+                !isEmpty(wishlistData) ?
+                  <div className='grid grid-flow-row-dense md:grid-cols-2 lg:grid-cols-3'>
+                    {
+                      wishlistData?.map((el, i) => (
+                        <Card key={i} Item={el} />
+                      ))
+                    }
+                  </div>
+                  :
+                  (
+                    <Fragment>
+                      <div className='mt-10 text-center tracking-widest font-extralight text-lg'>No Items in the wishlist</div>
+                      <Link href='/kicks'>
+                        <div className='mt-4 flex items-center justify-center'>
+                          <Button
+                            btnText={'CONTINUE SHOPPING'}
+                          />
+                        </div>
+                      </Link>
+                    </Fragment>
+                  )
+              )
           }
 
         </div>
