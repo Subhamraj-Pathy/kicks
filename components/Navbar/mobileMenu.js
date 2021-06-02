@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import { TiUser } from 'react-icons/ti';
 import { RiHome2Fill } from 'react-icons/ri';
@@ -16,6 +17,8 @@ import { logoutUser } from '../../helpers/auth';
 const MobileMenu = ({ userId, userData, setModalTrue, setUserData, setUserIdFromFirebase }) => {
 
   const iconStyles = 'text-2xl cursor-pointer';
+
+  const router = useRouter();
 
   const [showMenu, setShowMenu] = useState(false);
   const [pathName, setPathName] = useState('');
@@ -35,17 +38,20 @@ const MobileMenu = ({ userId, userData, setModalTrue, setUserData, setUserIdFrom
   const handleLogout = async () => {
     const response = await logoutUser();
     if (response) {
-      setUserIdFromFirebase('');
-      setUserData({
-        address: [],
-        email: '',
-        createdAt: 0,
-        id: '',
-        name: '',
-        bag: [],
-        wishlist: [],
-        orderHistory: []
-      });
+      router.push('/');
+      setTimeout(() => {
+        setUserIdFromFirebase('');
+        setUserData({
+          address: [],
+          email: '',
+          createdAt: 0,
+          id: '',
+          name: '',
+          bag: [],
+          wishlist: [],
+          orderHistory: []
+        });
+      }, 300);
     }
   }
 
@@ -77,15 +83,18 @@ const MobileMenu = ({ userId, userData, setModalTrue, setUserData, setUserIdFrom
 
         <div className='space-y-8 flex flex-col items-center'>
           <Link href='/'><div><RiHome2Fill className={`${iconStyles} ${pathName === '/' ? 'text-purple-800 text-4xl' : 'text-black'}`} /></div></Link>
-          <div className='relative'>
-            <IoBag className={`${iconStyles}`} />
-            <span className='px-2 py-0.5 rounded-full bg-yellow-300 text-sm absolute -top-2 left-6'>{bagLength}</span>
-          </div>
-          <div className='relative'>
-            <ImHeart className={`${iconStyles}`} />
-            <span className='px-2 py-0.5 rounded-full bg-yellow-300 text-sm absolute -top-2 left-6'>{wishlistLength}</span>
-          </div>
-          { userId && <TiUser className={`${iconStyles} text-4xl`}/> }
+          <Link href='/bag'>
+            <div className='relative'>
+              <IoBag className={`${iconStyles}`} />
+              <span className='px-2 py-0.5 rounded-full bg-yellow-300 text-sm absolute -top-2 left-6'>{bagLength}</span>
+            </div></Link>
+          <Link href='/wishlist'>
+            <div className='relative'>
+              <ImHeart className={`${iconStyles} ${pathName === '/wishlist' ? 'text-purple-800 text-4xl' : 'text-black'}`} />
+              <span className='px-2 py-0.5 rounded-full bg-yellow-300 text-sm absolute -top-2 left-6'>{wishlistLength}</span>
+            </div>
+          </Link>
+          {userId && <TiUser className={`${iconStyles} text-4xl`} />}
         </div>
 
         {

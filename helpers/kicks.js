@@ -44,3 +44,16 @@ export const getKickById = async (id) => {
 
   return array;
 }
+
+export const getKicksByIds = async (ids) => {
+  const array = [];
+  await firebase.firestore()
+  .collection('Products')
+  .where('id', 'in', ids)
+  .get()
+  .then(docs => {
+    docs.forEach(doc => array.push(doc.data()));
+  });
+
+  return array;
+}
