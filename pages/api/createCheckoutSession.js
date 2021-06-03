@@ -28,8 +28,7 @@ export default async (req, res) => {
     cancel_url: `${process.env.HOST}/bag`,
     metadata: {
       userId,
-      email,
-      images: JSON.stringify(items.map(item => item.image))
+      email
     }
   });
 
