@@ -9,6 +9,11 @@ import Nav from '../components/Navbar';
 import Button from '../components/Button/button';
 import { setModalTrue } from '../global/actions/modalActions';
 import { formatPrice } from '../helpers/formatCurrency';
+import { loadStripe } from '@stripe/stripe-js';
+import axios from 'axios';
+
+
+const stripePromise = loadStripe(process.env.STRIPE_PUBLIC);
 
 const Bag = ({ userId, userData, setModalTrue }) => {
 
@@ -28,6 +33,24 @@ const Bag = ({ userId, userData, setModalTrue }) => {
       setBagItems(bag);
     }
   }, [userId, userData]);
+
+  const createCheckoutSession = async () => {
+    const stripe = await stripePromise;
+
+    const checkoutSession = await axios.post('/api/createCheckoutSession', {
+      userId,
+      email: userData.email,
+      items: bagItems
+    });
+
+    const result = await stripe.redirectToCheckout({
+      sessionId: checkoutSession.data.id
+    });
+
+    if (result.error) {
+      alert(result.error.message);
+    }
+  };
 
   return (
     <div className='flex justify-center bg-gray-100'>
@@ -50,7 +73,7 @@ const Bag = ({ userId, userData, setModalTrue }) => {
 
           {/* REST CONTENT GOES BELOW */}
           {/* ----------------------- */}
-          <div className='mt-10 text-center tracking-widest font-extralight text-3xl'>Shopping Cart</div>
+          <div className='mt-10 text-center tracking-widest font-extralight text-3xl'>Shopping Bag</div>
           {
             isEmpty(bagItems) ?
               (
@@ -95,7 +118,9 @@ const Bag = ({ userId, userData, setModalTrue }) => {
                     <p className='mt-2 text-left pl-2 lg:text-center lg:pl-0 tracking-widest text-lg'>Total ({bagItems.length} Items): <span className='font-bold'>&#8377;{formatPrice(total)}</span></p>
                     <div className='my-4 flex items-center justify-center'>
                       <Button
+                        onClick={() => createCheckoutSession()}
                         btnText={'BUY'}
+                        role='link'
                       />
                     </div>
                   </div>

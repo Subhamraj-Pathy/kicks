@@ -8,7 +8,8 @@ module.exports = {
       messagingSenderId: process.env.FIREBASE_MESSAGE_SENDER_ID,
       appId: process.env.FIREBASE_APP_ID,
       measurementId: process.env.FIREBASE_MEASUREMENT_ID
-    }
+    },
+    STRIPE_PUBLIC: process.env.STRIPE_PUBLIC_KEY,
   },
   images: {
     domains: ['firebasestorage.googleapis.com'],
