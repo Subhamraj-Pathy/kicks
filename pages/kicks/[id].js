@@ -73,7 +73,8 @@ const Kick = ({ userData, userId, setToast, setUserData }) => {
       color: kick.color,
       price: kick.price,
       quantity: 1,
-      size: selectedSize
+      size: selectedSize,
+      image: kick.images[0]
     }
     if (userId) {
       if (selectedSize) {

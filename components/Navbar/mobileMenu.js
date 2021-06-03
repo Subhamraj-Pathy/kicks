@@ -85,7 +85,7 @@ const MobileMenu = ({ userId, userData, setModalTrue, setUserData, setUserIdFrom
           <Link href='/'><div><RiHome2Fill className={`${iconStyles} ${pathName === '/' ? 'text-purple-800 text-4xl' : 'text-black'}`} /></div></Link>
           <Link href='/bag'>
             <div className='relative'>
-              <IoBag className={`${iconStyles}`} />
+              <IoBag className={`${iconStyles} ${pathName === '/bag' ? 'text-purple-800 text-4xl' : 'text-black'}`} />
               <span className='px-2 py-0.5 rounded-full bg-yellow-300 text-sm absolute -top-2 left-6'>{bagLength}</span>
             </div></Link>
           <Link href='/wishlist'>
