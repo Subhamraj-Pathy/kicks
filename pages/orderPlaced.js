@@ -2,10 +2,12 @@ import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
 import Nav from '../components/Navbar';
 import { setModalTrue } from '../global/actions/modalActions';
 import { setUserData } from '../global/actions/userActions';
 import { getUserById } from '../helpers/auth';
+import Button from '../components/Button/button';
 
 const OrderPlaced = ({ userId, setUserData, setModalTrue }) => {
 
@@ -39,6 +41,24 @@ const OrderPlaced = ({ userId, setUserData, setModalTrue }) => {
 
           {/* REST CONTENT GOES BELOW */}
           {/* ----------------------- */}
+
+          <div className='mb-4 text-center tracking-widest text-xl lg:text-2xl'>
+            Your Order Has Been Placed Successfully
+          </div>
+
+          <div className='shadow-md w-full h-80 flex justify-center' style={{ background: '#B8B8B8' }}>
+            <img
+              loading='lazy'
+              src='/images/l.jpg'
+              alt='banner'
+            />
+          </div>
+
+          <Link href='/myOrders'>
+            <div className='flex justify-center mt-4'>
+              <Button btnText='VIEW ORDERS' />
+            </div>
+          </Link>
         </div>
       </div>
     </div>
