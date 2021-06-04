@@ -52,6 +52,17 @@ const Wishlist = ({ userId, userData, setModalTrue }) => {
           {/* REST CONTENT GOES BELOW */}
           {/* ----------------------- */}
 
+          <div className='my-4 text-center tracking-widest font-extralight text-3xl'>Your Wishlist</div>
+
+          <div className='shadow-md w-full h-80 flex justify-center' style={{ background: '#11051B' }}>
+            <img
+              loading='lazy'
+              src='/images/blue.jpg'
+              alt='banner'
+              style={{ objectFit: 'contain' }}
+            />
+          </div>
+
           {
             loading ?
               <div className='mt-20'><Loader /></div>
