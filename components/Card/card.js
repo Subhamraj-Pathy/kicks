@@ -16,7 +16,7 @@ const Card = ({ Item }) => {
       />
       <h4 className='tracking-widest font-extralight text-xl text-center'>{Item.name}</h4>
       <div className='flex items-center justify-center absolute top-4 right-6'>
-        {!!(Item.stars / Item.raters) ? (Item.stars / Item.raters).toFixed(2) : 0}
+        {!!(Item.stars) ? Item.stars : 0}
         <HiStar className='mt-0.5 ml-1 text-yellow-500' />
       </div>
       <div className='tracking-widest font-bold text-xl'>&#8377;{formatPrice(Item.price)}</div>

@@ -1,4 +1,4 @@
-import { slice } from 'lodash';
+import { filter, forEach, slice } from 'lodash';
 import { firebase } from '../lib/firebase';
 
 export const getNewAdditions = async () => {
@@ -56,4 +56,25 @@ export const getKicksByIds = async (ids) => {
   });
 
   return array;
+}
+
+export const isShoeBought = async (orderHistory, shoeId) => {
+  let isMatched = false;
+  forEach(orderHistory, (order)=> {
+    forEach(order.productIds, (id) => {
+      if (id === shoeId) {
+        isMatched = true;
+      }
+    })
+  });
+  return isMatched;
+}
+
+export const findRating = async (ratersArray, userId) => {
+  const filteredArray = filter(ratersArray, (item) => item.ratedBy === userId);
+  if (filteredArray.length === 0) {
+    return 0
+  } else {
+    return filteredArray[0].rating;
+  }
 }
