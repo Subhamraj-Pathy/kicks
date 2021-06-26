@@ -78,3 +78,16 @@ export const findRating = async (ratersArray, userId) => {
     return filteredArray[0].rating;
   }
 }
+
+export const getOrderDetailsByOrderId = async (orderIds) => {
+  const array = [];
+  await firebase.firestore()
+  .collection('orders')
+  .where('id', 'in', orderIds)
+  .get()
+  .then(docs => {
+    docs.forEach(doc => array.push(doc.data()));
+  });
+
+  return array;
+}

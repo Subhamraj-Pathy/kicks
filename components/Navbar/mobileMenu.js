@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { TiUser } from 'react-icons/ti';
+import { FaBoxes } from 'react-icons/fa';
 import { RiHome2Fill } from 'react-icons/ri';
 import { IoBag } from 'react-icons/io5';
 import { ImHeart } from 'react-icons/im';
@@ -94,7 +94,7 @@ const MobileMenu = ({ userId, userData, setModalTrue, setUserData, setUserIdFrom
               <span className='px-2 py-0.5 rounded-full bg-yellow-300 text-sm absolute -top-2 left-6'>{wishlistLength}</span>
             </div>
           </Link>
-          {userId && <TiUser className={`${iconStyles} text-4xl`} />}
+          {userId && <Link href='/myOrders'><FaBoxes className={`${iconStyles} ${pathName === '/myOrders' ? 'text-purple-800 text-4xl' : 'text-black text-2xl'}`} /></Link>}
         </div>
 
         {
